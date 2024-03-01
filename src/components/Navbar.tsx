@@ -8,6 +8,14 @@ const navItems = [
     label: 'Home',
     href: '/admin',
   },
+  {
+    label: 'Registration',
+    href: '/admin/registration',
+  },
+  {
+    label: 'Gate',
+    href: '/admin/gate',
+  },
 ];
 
 const Navbar = () => {

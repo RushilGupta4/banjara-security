@@ -33,10 +33,10 @@ const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <div>
+    <div className='h-full'>
       <Navbar />
-      <div className='my-12 max-w-[120ch] mx-auto'>
-        <div className='mx-8 md:mx-16'>{children}</div>
+      <div className='h-full py-12 max-w-[120ch] mx-auto'>
+        <div className='h-full mx-8 md:mx-16'>{children}</div>
       </div>
     </div>
   );

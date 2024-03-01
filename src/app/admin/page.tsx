@@ -5,20 +5,13 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from 
 import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
 import { Modal, ModalContent, ModalHeader, ModalBody, useDisclosure } from '@nextui-org/modal';
-import useRealtimeData from '@/hooks/useRealtimeData';
-import { database } from '@/firebase/config';
-import { ref, update } from 'firebase/database';
+import { firestore } from '@/firebase/config';
+import { collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { EditIcon } from './EditIcon';
 import { SearchIcon } from './SearchIcon';
-
-interface UserType {
-  uid: string;
-  name: string;
-  college: string;
-  email: string;
-  phone: string;
-  status: string;
-}
+import { UserType } from '@/types';
+import useFirestore from '@/hooks/useFirestore';
+import cn from '@/lib/cn';
 
 const columns = [
   { name: 'UID', id: 'uid' },
@@ -26,18 +19,21 @@ const columns = [
   { name: 'College', id: 'college' },
   { name: 'Email', id: 'email' },
   { name: 'Phone', id: 'phone' },
-  { name: 'Status', id: 'status' },
-  { name: 'Edit Status', id: 'editStatus' },
+  { name: 'Gate', id: 'gateStatus' },
+  { name: 'Edit Status', id: 'editGateStatus' },
+  { name: 'Reg Status', id: 'registered' },
+  { name: 'Edit Reg Status', id: 'editRegistered' },
 ];
 
 export default function AdminPage() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const usersData = useRealtimeData<UserType[]>('users');
-  const [currentUser, setCurrentUser] = useState({ uid: null, name: null, email: null, status: null });
+  const usersData = useFirestore<UserType>('users');
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentColumn, setCurrentColumn] = useState<any>(null);
   const [query, setQuery] = useState('');
 
   const renderCell = useCallback((user: any, columnKey: any) => {
-    const cellValue: string = user[columnKey];
+    const cellValue: any = user[columnKey];
 
     switch (columnKey) {
       case 'name':
@@ -48,12 +44,20 @@ export default function AdminPage() {
         return <p className='text-sm'>{cellValue}</p>;
       case 'phone':
         return <p className='text-sm'>{cellValue}</p>;
-      case 'status':
-        return <p className='text-sm text-center mx-auto'>{cellValue}</p>;
-      case 'editStatus':
+      case 'gateStatus':
+        return <p className={cn('text-sm ', cellValue && 'text-green-400', !cellValue && 'text-red-400')}>{cellValue ? 'IN' : 'OUT'}</p>;
+      case 'editGateStatus':
         return (
-          <Button size='sm' className='w-full' onClick={() => promptEditStatus(user)}>
-            <EditIcon size='small' /> {user.status == 'IN' ? 'Sign Out' : 'Sign In'}
+          <Button size='sm' className='w-full' onClick={() => promptEdit(user, 'status')}>
+            <EditIcon size='small' /> {user.gateStatus ? 'Sign Out' : 'Sign In'}
+          </Button>
+        );
+      case 'registered':
+        return <p className={cn('text-sm', cellValue && 'text-green-400', !cellValue && 'text-red-400')}>{cellValue ? 'TRUE' : 'FALSE'}</p>;
+      case 'editRegistered':
+        return (
+          <Button size='sm' className='w-full' onClick={() => promptEdit(user, 'registered')}>
+            <EditIcon size='small' /> {!user.registered ? 'Unregister' : 'Register'}
           </Button>
         );
       default:
@@ -61,28 +65,28 @@ export default function AdminPage() {
     }
   }, []);
 
-  // Placeholder for the editStatus function
-  const promptEditStatus = (user: any) => {
+  const promptEdit = (user: any, column: string) => {
+    console.log('Edit status:', user, column);
     setCurrentUser(user);
+    setCurrentColumn(column);
     onOpen();
   };
 
-  const confirmEditStatus = (onClose: () => void) => {
-    const id = currentUser.uid; // Assuming each user has a unique ID
-    const newPath = `/users/${id}/status`; // Path to the user's status in Firebase
-    const newValue = currentUser.status === 'IN' ? 'OUT' : 'IN'; // New status value
+  const confirmEditColumn = (onClose: () => void, column: string) => {
+    if (!currentUser) return;
+    if (!column) return;
 
-    const updates: any = {};
-    updates[newPath] = newValue;
+    const id = currentUser.uid;
+    const newValue: any = !currentUser[column];
 
-    update(ref(database), updates)
+    const userRef = doc(firestore, `users/${id}`);
+
+    updateDoc(userRef, { [column]: newValue })
       .then(() => {
-        // Update successful
         onClose(); // Close modal after updating
       })
       .catch((error) => {
-        // Handle any errors
-        console.error('Error updating status:', error);
+        console.error('Error updating:', error);
       });
   };
 
@@ -106,15 +110,29 @@ export default function AdminPage() {
                   <li>
                     <b>Email:</b> {currentUser.email}
                   </li>
-                  <li>
-                    <b>Old Status:</b> {currentUser.status}
-                  </li>
-                  <li>
-                    <b>New Status:</b> {currentUser.status == 'IN' ? 'OUT' : 'IN'}
-                  </li>
+
+                  {currentColumn === 'status' ? (
+                    <>
+                      <li>
+                        <b>Old Status:</b> {!currentUser.gateStatus ? 'OUT' : 'IN'}
+                      </li>
+                      <li>
+                        <b>New Status:</b> {currentUser.gateStatus ? 'OUT' : 'IN'}
+                      </li>
+                    </>
+                  ) : (
+                    <>
+                      <li>
+                        <b>Old Verified:</b> {currentUser.registered ? 'True' : 'False'}
+                      </li>
+                      <li>
+                        <b>New Verified:</b> {!currentUser.registered ? 'True' : 'False'}
+                      </li>
+                    </>
+                  )}
                 </div>
 
-                <Button onClick={() => confirmEditStatus(onClose)}>Confirm</Button>
+                <Button onClick={() => confirmEditColumn(onClose, currentColumn)}>Confirm</Button>
               </ModalBody>
             </>
           )}

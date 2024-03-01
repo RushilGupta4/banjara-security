@@ -8,6 +8,9 @@ dependencies:
   '@nextui-org/react':
     specifier: ^2.2.9
     version: 2.2.9(@types/react@18.2.60)(framer-motion@11.0.7)(react-dom@18.2.0)(react@18.2.0)(tailwind-variants@0.2.0)(tailwindcss@3.4.1)
+  '@types/nodemailer':
+    specifier: ^6.4.14
+    version: 6.4.14
   firebase:
     specifier: ^10.8.1
     version: 10.8.1
@@ -17,12 +20,18 @@ dependencies:
   next:
     specifier: 14.1.0
     version: 14.1.0(react-dom@18.2.0)(react@18.2.0)
+  nodemailer:
+    specifier: ^6.9.11
+    version: 6.9.11
   react:
     specifier: ^18
     version: 18.2.0
   react-dom:
     specifier: ^18
     version: 18.2.0(react@18.2.0)
+  react-toastify:
+    specifier: ^10.0.4
+    version: 10.0.4(react-dom@18.2.0)(react@18.2.0)
 
 devDependencies:
   '@types/node':
@@ -3080,6 +3089,12 @@ packages:
     dependencies:
       undici-types: 5.26.5
 
+  /@types/nodemailer@6.4.14:
+    resolution: {integrity: sha512-fUWthHO9k9DSdPCSPRqcu6TWhYyxTBg382vlNIttSe9M7XfsT06y0f24KHXtbnijPGGRIcVvdKHTNikOI6qiHA==}
+    dependencies:
+      '@types/node': 20.11.22
+    dev: false
+
   /@types/prop-types@15.7.11:
     resolution: {integrity: sha512-ga8y9v9uyeiLdpKddhxYQkxNDrfvuPrlFb0N1qnZZByvcElJaXthF1UhvCh9TLWJBEHeNtdnbysW7Y6Uq8CVng==}
 
@@ -4835,6 +4850,11 @@ packages:
     resolution: {integrity: sha512-y10wOWt8yZpqXmOgRo77WaHEmhYQYGNA6y421PKsKYWEK8aW+cqAphborZDhqfyKrbZEN92CN1X2KbafY2s7Yw==}
     dev: true
 
+  /nodemailer@6.9.11:
+    resolution: {integrity: sha512-UiAkgiERuG94kl/3bKfE8o10epvDnl0vokNEtZDPTq9BWzIl6EFT9336SbIT4oaTBD8NmmUTLsQyXHV82eXSWg==}
+    engines: {node: '>=6.0.0'}
+    dev: false
+
   /normalize-path@3.0.0:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}
     engines: {node: '>=0.10.0'}
@@ -5193,6 +5213,17 @@ packages:
       use-latest: 1.2.1(@types/react@18.2.60)(react@18.2.0)
     transitivePeerDependencies:
       - '@types/react'
+    dev: false
+
+  /react-toastify@10.0.4(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-etR3RgueY8pe88SA67wLm8rJmL1h+CLqUGHuAoNsseW35oTGJEri6eBTyaXnFKNQ80v/eO10hBYLgz036XRGgA==}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      clsx: 2.1.0
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /react@18.2.0:
