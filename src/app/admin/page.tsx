@@ -6,12 +6,13 @@ import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
 import { Modal, ModalContent, ModalHeader, ModalBody, useDisclosure } from '@nextui-org/modal';
 import { firestore } from '@/firebase/config';
-import { collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 import { EditIcon } from './EditIcon';
 import { SearchIcon } from './SearchIcon';
 import { UserType } from '@/types';
 import useFirestore from '@/hooks/useFirestore';
 import cn from '@/lib/cn';
+import { readableAttendingDays } from '@/app/signup/email';
 
 const columns = [
   { name: 'UID', id: 'uid' },
@@ -20,9 +21,10 @@ const columns = [
   { name: 'Email', id: 'email' },
   { name: 'Phone', id: 'phone' },
   { name: 'Gate', id: 'gateStatus' },
-  { name: 'Edit Status', id: 'editGateStatus' },
+  // { name: 'Edit Status', id: 'editGateStatus' },
   { name: 'Reg Status', id: 'registered' },
-  { name: 'Edit Reg Status', id: 'editRegistered' },
+  // { name: 'Edit Reg Status', id: 'editRegistered' },
+  { name: 'Attending Days', id: 'attendingDays' },
 ];
 
 export default function AdminPage() {
@@ -60,6 +62,8 @@ export default function AdminPage() {
             <EditIcon size='small' /> {!user.registered ? 'Unregister' : 'Register'}
           </Button>
         );
+      case 'attendingDays':
+        return <p className='text-sm'>{readableAttendingDays(cellValue)}</p>;
       default:
         return cellValue;
     }

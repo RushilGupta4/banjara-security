@@ -1,4 +1,4 @@
-// pages/api/sendRegistrationEmail.ts
+// email/route.ts
 import { NextResponse, type NextRequest } from 'next/server';
 import nodemailer from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
@@ -9,13 +9,13 @@ export async function POST(req: NextRequest) {
   const transport = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: process.env.NODE_EMAIL,
-      pass: process.env.NODE_PASS,
+      user: process.env.NODEMAILER_EMAIL,
+      pass: process.env.NODEMAILER_PW,
     },
   });
 
   const mailOptions: Mail.Options = {
-    from: process.env.NODE_EMAIL,
+    from: process.env.NODEMAILER_EMAIL,
     ...emailOptions,
   };
 
@@ -23,6 +23,7 @@ export async function POST(req: NextRequest) {
     await transport.sendMail(mailOptions);
     return NextResponse.json({ message: 'Success!' }, { status: 200 });
   } catch (err) {
+    console.error(err);
     return NextResponse.json({ message: 'Failed!' }, { status: 500 });
   }
 }

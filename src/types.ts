@@ -6,6 +6,8 @@ type UserType = {
   phone: string;
   gateStatus: boolean;
   registered: boolean;
+  competitions: string[];
+  attendingDays: string[];
 };
 
 export type { UserType };
