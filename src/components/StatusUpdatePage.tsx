@@ -11,7 +11,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const GenericStatusUpdatePage = ({
-  key,
+  dataKey,
   title,
   actionTrue,
   actionFalse,
@@ -22,7 +22,7 @@ const GenericStatusUpdatePage = ({
   alreadyTrueMessage,
   alreadyFalseMessage,
 }: {
-  key: string;
+  dataKey: string;
   title: string;
   actionTrue: string;
   actionFalse: string;
@@ -60,7 +60,7 @@ const GenericStatusUpdatePage = ({
 
   const confirmEditColumn = async (onClose: () => void) => {
     // Check if attempting to set the registration to the same value
-    if (currentUser[key] === status) {
+    if (currentUser[dataKey] === status) {
       toast.error(status ? alreadyTrueMessage : alreadyFalseMessage);
       onClose();
       return;
@@ -69,7 +69,7 @@ const GenericStatusUpdatePage = ({
     const userRef = doc(firestore, `users/${uid}`);
 
     try {
-      await updateDoc(userRef, { [key]: status });
+      await updateDoc(userRef, { [dataKey]: status });
       toast.success(status ? successMessageTrue : successMessageFalse);
       setUid(''); // Optionally reset UID input after successful update
     } catch (error) {

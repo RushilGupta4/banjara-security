@@ -5,7 +5,7 @@ import GenericStatusUpdatePage from '@/components/StatusUpdatePage';
 export default function RegistationPage() {
   return (
     <GenericStatusUpdatePage
-      key='registered'
+      dataKey='registered'
       title='Registration'
       actionTrue='Register'
       actionFalse='Unregister'

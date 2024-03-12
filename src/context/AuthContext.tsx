@@ -62,5 +62,5 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }: { childr
     setLoggedIn(false);
   };
 
-  return <AuthContext.Provider value={{ error, login, logout, loggedIn: true || loggedIn, loading }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ error, login, logout, loggedIn: false || loggedIn, loading }}>{children}</AuthContext.Provider>;
 };

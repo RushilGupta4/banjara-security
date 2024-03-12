@@ -31,7 +31,7 @@ const SignupForm = () => {
     const isEmailValid = emailRegex.test(email);
     const isPhoneValid = phone.length >= 10;
     const isAttendingDaysValid = attendingDay != null && attendingDay.length > 0;
-    return isEmailValid && isPhoneValid;
+    return isEmailValid && isPhoneValid && isAttendingDaysValid;
   };
 
   const checkIfUserExists = async () => {
@@ -105,6 +105,12 @@ const SignupForm = () => {
         return;
       }
 
+      if (attendingDay === '3' && existingUser.attendingDays.length > 0) {
+        toast.error('User already registered for a day.');
+        setLoading(false);
+        return;
+      }
+
       existingUser.attendingDays.push(attendingDay);
 
       const existingUserRef = doc(firestore, `users/${existingUser.uid}`);
@@ -143,6 +149,10 @@ const SignupForm = () => {
       setEmail('');
       setPhone('');
       setAttendingDay('');
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (error) {
       toast.error('Registration failed. Please try again.');
     }

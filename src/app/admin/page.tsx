@@ -48,20 +48,20 @@ export default function AdminPage() {
         return <p className='text-sm'>{cellValue}</p>;
       case 'gateStatus':
         return <p className={cn('text-sm ', cellValue && 'text-green-400', !cellValue && 'text-red-400')}>{cellValue ? 'IN' : 'OUT'}</p>;
-      case 'editGateStatus':
-        return (
-          <Button size='sm' className='w-full' onClick={() => promptEdit(user, 'status')}>
-            <EditIcon size='small' /> {user.gateStatus ? 'Sign Out' : 'Sign In'}
-          </Button>
-        );
+      // case 'editGateStatus':
+      //   return (
+      //     <Button size='sm' className='w-full' onClick={() => promptEdit(user, 'status')}>
+      //       <EditIcon size='small' /> {user.gateStatus ? 'Sign Out' : 'Sign In'}
+      //     </Button>
+      //   );
       case 'registered':
         return <p className={cn('text-sm', cellValue && 'text-green-400', !cellValue && 'text-red-400')}>{cellValue ? 'TRUE' : 'FALSE'}</p>;
-      case 'editRegistered':
-        return (
-          <Button size='sm' className='w-full' onClick={() => promptEdit(user, 'registered')}>
-            <EditIcon size='small' /> {!user.registered ? 'Unregister' : 'Register'}
-          </Button>
-        );
+      // case 'editRegistered':
+      //   return (
+      //     <Button size='sm' className='w-full' onClick={() => promptEdit(user, 'registered')}>
+      //       <EditIcon size='small' /> {!user.registered ? 'Unregister' : 'Register'}
+      //     </Button>
+      //   );
       case 'attendingDays':
         return <p className='text-sm'>{readableAttendingDays(cellValue)}</p>;
       default:

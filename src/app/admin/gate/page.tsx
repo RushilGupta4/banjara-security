@@ -5,7 +5,7 @@ import GenericStatusUpdatePage from '@/components/StatusUpdatePage';
 export default function GatePage() {
   return (
     <GenericStatusUpdatePage
-      key={'gateStatus'}
+      dataKey={'gateStatus'}
       title={'Gate'}
       actionTrue={'Sign In'}
       actionFalse={'Sign Out'}
