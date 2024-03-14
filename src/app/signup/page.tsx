@@ -27,9 +27,9 @@ const SignupForm = () => {
   const [attendingDay, setAttendingDay] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const validateInput = () => {
+  const validateInput = (finalPhone: string) => {
     const isEmailValid = emailRegex.test(email);
-    const isPhoneValid = phone.length >= 10;
+    const isPhoneValid = finalPhone.length >= 10;
     const isAttendingDaysValid = attendingDay != null && attendingDay.length > 0;
     return isEmailValid && isPhoneValid && isAttendingDaysValid;
   };
@@ -57,7 +57,17 @@ const SignupForm = () => {
 
   const handleSubmit = async () => {
     setLoading(true);
-    if (!validateInput()) {
+
+    let finalPhone = phone.length > 10 && phone.startsWith('91') ? phone.replace('91', '') : phone;
+    finalPhone = finalPhone.startsWith('+91') ? finalPhone.replace('+91', '') : finalPhone;
+    finalPhone = finalPhone.startsWith('0') ? finalPhone.substring(1) : finalPhone;
+    if (finalPhone.length !== 10) {
+      toast.error('Invalid phone number!');
+      setLoading(false);
+      return;
+    }
+
+    if (!validateInput(finalPhone)) {
       toast.error('Please fill all the fields!');
       setLoading(false);
       return;
@@ -72,7 +82,7 @@ const SignupForm = () => {
       name,
       college,
       email,
-      phone,
+      phone: finalPhone,
       gateStatus: false,
       registered: false,
       competitions: [],

@@ -10,4 +10,9 @@ type UserType = {
   attendingDays: string[];
 };
 
-export type { UserType };
+type Replacement = {
+  oldUserID: string;
+  newUserID: string;
+};
+
+export type { UserType, Replacement };
