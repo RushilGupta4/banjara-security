@@ -24,7 +24,7 @@ const UserCard = ({
   onReplace: (value: string) => void;
 }) => {
   return (
-    <Card className='w-96 shadow-lg'>
+    <Card className='w-80 sm:w-96 shadow-lg'>
       <CardBody>
         <div className='text-center mb-6'>
           <p className='text-xl font-bold'>{title}</p>
