@@ -31,7 +31,7 @@ export default function Header() {
   const { logout } = useAuth();
 
   return (
-    <Navbar position='sticky' className='h-20' maxWidth='xl' onMenuOpenChange={setIsMenuOpen}>
+    <Navbar position='sticky' className='h-20' maxWidth='xl' onMenuOpenChange={setIsMenuOpen} isMenuOpen={isMenuOpen}>
       <NavbarContent className='sm:hidden'>
         <NavbarMenuToggle aria-label={isMenuOpen ? 'Close menu' : 'Open menu'} className='sm:hidden' />
         <Link href='/' color='foreground' className='sm:block hidden'>
@@ -52,7 +52,10 @@ export default function Header() {
       <NavbarMenu className='mt-2 from-black to-black/40 bg-gradient-to-b'>
         {LINKS.map((link) => (
           <NavbarMenuItem key={link.href}>
-            <Link className={cn(`font-medium`, pathname === link.href && 'text-purple-500', pathname !== link.href && 'text-white')} href={link.href}>
+            <Link
+              className={cn(`font-medium`, pathname === link.href && 'text-purple-500', pathname !== link.href && 'text-white')}
+              href={link.href}
+              onClick={() => setIsMenuOpen(false)}>
               {link.name}
             </Link>
           </NavbarMenuItem>
