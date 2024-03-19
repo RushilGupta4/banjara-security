@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 // import LogoImage from '@/../public/logo.png';
 import Image from 'next/image';
 import cn from '@/lib/cn';
-import { Button } from '@nextui-org/Button';
+import { Button } from '@nextui-org/button';
 import { useAuth } from '@/context/AuthContext';
 
 const LINKS = [
