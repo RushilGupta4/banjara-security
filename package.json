@@ -9,7 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@nextui-org/react": "^2.2.9",
+    "@nextui-org/button": "^2.0.26",
+    "@nextui-org/card": "^2.0.24",
+    "@nextui-org/input": "^2.0.24",
+    "@nextui-org/modal": "^2.0.28",
+    "@nextui-org/navbar": "^2.0.27",
     "@types/nodemailer": "^6.4.14",
     "clsx": "^2.1.0",
     "firebase": "^10.8.1",
