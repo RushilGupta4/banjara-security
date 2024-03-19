@@ -18,6 +18,7 @@ const columns = [
   { name: 'UID', id: 'uid' },
   { name: 'Name', id: 'name' },
   { name: 'College', id: 'college' },
+  { name: 'Team', id: 'team' },
   { name: 'Email', id: 'email' },
   { name: 'Phone', id: 'phone' },
   { name: 'Gate', id: 'gateStatus' },
@@ -41,11 +42,11 @@ export default function AdminPage() {
       case 'name':
         return <p className='text-bold text-sm'>{cellValue}</p>;
       case 'college':
-        return <p className='text-sm'>{cellValue}</p>;
       case 'email':
-        return <p className='text-sm'>{cellValue}</p>;
       case 'phone':
         return <p className='text-sm'>{cellValue}</p>;
+      case 'team':
+        return <p className='text-sm'>{cellValue ? cellValue : 'None'}</p>;
       case 'gateStatus':
         return <p className={cn('text-sm ', cellValue && 'text-green-400', !cellValue && 'text-red-400')}>{cellValue ? 'IN' : 'OUT'}</p>;
       // case 'editGateStatus':
@@ -89,7 +90,7 @@ export default function AdminPage() {
       .then(() => {
         onClose(); // Close modal after updating
       })
-      .catch((error) => {
+      .catch((error: any) => {
         console.error('Error updating:', error);
       });
   };
@@ -162,7 +163,7 @@ export default function AdminPage() {
         </div>
         <Table aria-label='Admin table with custom cells'>
           <TableHeader columns={columns}>{(column) => <TableColumn key={column.id}>{column.name}</TableColumn>}</TableHeader>
-          <TableBody items={usersData.filter((item) => JSON.stringify(Object.values(item)).includes(query)) || []}>
+          <TableBody items={usersData.filter((item) => JSON.stringify(Object.values(item)).toLowerCase().includes(query.toLowerCase())) || []}>
             {(item: UserType) => <TableRow key={item.uid}>{(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}</TableRow>}
           </TableBody>
         </Table>

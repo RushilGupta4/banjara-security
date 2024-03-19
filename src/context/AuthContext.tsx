@@ -36,7 +36,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }: { childr
     setLoading(true);
 
     signInWithEmailAndPassword(auth, email, password)
-      .then((result) => {
+      .then((result: any) => {
         if (result) {
           setLoggedIn(true);
         } else {
@@ -47,7 +47,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }: { childr
         }
         setLoading(false);
       })
-      .catch((error) => {
+      .catch((error: any) => {
         console.log(error);
         setError('Incorrect Credentials');
         setTimeout(() => {
@@ -62,5 +62,5 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }: { childr
     setLoggedIn(false);
   };
 
-  return <AuthContext.Provider value={{ error, login, logout, loggedIn: true || loggedIn, loading }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ error, login, logout, loggedIn: false || loggedIn, loading }}>{children}</AuthContext.Provider>;
 };

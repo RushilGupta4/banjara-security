@@ -8,6 +8,7 @@ type UserType = {
   registered: boolean;
   competitions: string[];
   attendingDays: string[];
+  team?: string;
 };
 
 type Replacement = {

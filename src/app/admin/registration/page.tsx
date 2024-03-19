@@ -15,6 +15,7 @@ export default function RegistationPage() {
       successMessageFalse='User has been unregistered.'
       alreadyTrueMessage='User is already registered.'
       alreadyFalseMessage='User is already unregistered.'
+      prereqKey={'gateStatus'}
     />
   );
 }

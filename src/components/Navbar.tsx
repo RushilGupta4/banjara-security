@@ -2,16 +2,20 @@
 
 import React, { useState } from 'react';
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem } from '@nextui-org/navbar';
-import { Link } from '@nextui-org/link';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 // import LogoImage from '@/../public/logo.png';
 import Image from 'next/image';
+import cn from '@/lib/cn';
+import { Button } from '@nextui-org/react';
+import { useAuth } from '@/context/AuthContext';
 
 const LINKS = [
   { name: 'Home', href: '/admin' },
-  { name: 'Registration', href: '/admin/registration' },
   { name: 'Gate', href: '/admin/gate' },
+  { name: 'Registration', href: '/admin/registration' },
   { name: 'Replace', href: '/admin/replace' },
+  { name: 'Competitions', href: '/admin/competitions' },
 ];
 
 // const Logo = () => (
@@ -23,6 +27,8 @@ const LINKS = [
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
+
+  const { logout } = useAuth();
 
   return (
     <Navbar position='sticky' className='h-20' maxWidth='xl' onMenuOpenChange={setIsMenuOpen}>
@@ -36,7 +42,7 @@ export default function Header() {
       <NavbarContent className='hidden sm:flex gap-8' justify='center'>
         {LINKS.map((link) => (
           <NavbarItem key={link.href}>
-            <Link color={pathname === link.href ? 'secondary' : 'foreground'} className='font-medium' href={link.href}>
+            <Link className={cn(`font-medium`, pathname === link.href && 'text-purple-500', pathname !== link.href && 'text-white')} href={link.href}>
               {link.name}
             </Link>
           </NavbarItem>
@@ -46,12 +52,18 @@ export default function Header() {
       <NavbarMenu className='mt-2 from-black to-black/40 bg-gradient-to-b'>
         {LINKS.map((link) => (
           <NavbarMenuItem key={link.href}>
-            <Link color={pathname === link.href ? 'secondary' : 'foreground'} className='w-full my-2' href={link.href} size='lg'>
+            <Link className={cn(`font-medium`, pathname === link.href && 'text-purple-500', pathname !== link.href && 'text-white')} href={link.href}>
               {link.name}
             </Link>
           </NavbarMenuItem>
         ))}
       </NavbarMenu>
+
+      <NavbarItem>
+        <Button color='primary' onClick={() => logout()}>
+          Logout
+        </Button>
+      </NavbarItem>
     </Navbar>
   );
 }

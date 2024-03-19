@@ -21,6 +21,7 @@ const GenericStatusUpdatePage = ({
   successMessageFalse,
   alreadyTrueMessage,
   alreadyFalseMessage,
+  prereqKey = null,
 }: {
   dataKey: string;
   title: string;
@@ -32,6 +33,7 @@ const GenericStatusUpdatePage = ({
   successMessageFalse: string;
   alreadyTrueMessage: string;
   alreadyFalseMessage: string;
+  prereqKey?: string | null;
 }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [uid, setUid] = useState('');
@@ -50,6 +52,13 @@ const GenericStatusUpdatePage = ({
     if (!docSnap.exists()) {
       toast.error('User does not exist.');
       return;
+    }
+
+    if (prereqKey) {
+      if (!docSnap.data()[prereqKey]) {
+        toast.error('User has not met the prerequisite.');
+        return;
+      }
     }
 
     setStatus(newStatus);
