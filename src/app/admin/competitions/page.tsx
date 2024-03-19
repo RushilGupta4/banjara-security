@@ -73,6 +73,7 @@ const CompetitionUpdatePage = () => {
       toast.success('Competitions updated successfully!');
       userIDUpdate(''); // Reset UID
       setSelectedCompetitions([]); // Reset competitions
+      setTeam('');
       onClose();
     } catch (error) {
       console.error(`Error updating competitions:`, error);

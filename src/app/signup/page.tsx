@@ -87,6 +87,7 @@ const SignupForm = () => {
       registered: false,
       competitions: [],
       attendingDays: [attendingDay],
+      payment: false,
     };
 
     const { status, existingUser, error } = await checkIfUserExists();

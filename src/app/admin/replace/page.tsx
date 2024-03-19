@@ -6,7 +6,7 @@ import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
 import { Modal, ModalBody, ModalHeader, ModalContent, useDisclosure } from '@nextui-org/modal';
 import { firestore } from '@/firebase/config';
-import { doc, setDoc, getDoc, writeBatch, collection } from 'firebase/firestore';
+import { doc, getDoc, writeBatch } from 'firebase/firestore';
 import { Replacement, UserType } from '@/types';
 import { readableAttendingDays } from '@/app/signup/email';
 import { toast, ToastContainer } from 'react-toastify';

@@ -9,6 +9,7 @@ type UserType = {
   competitions: string[];
   attendingDays: string[];
   team?: string;
+  payment: boolean;
 };
 
 type Replacement = {

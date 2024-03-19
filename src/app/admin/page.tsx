@@ -18,12 +18,13 @@ const columns = [
   { name: 'UID', id: 'uid' },
   { name: 'Name', id: 'name' },
   { name: 'College', id: 'college' },
-  { name: 'Team', id: 'team' },
+  // { name: 'Team', id: 'team' },
   { name: 'Email', id: 'email' },
   { name: 'Phone', id: 'phone' },
   { name: 'Gate', id: 'gateStatus' },
   // { name: 'Edit Status', id: 'editGateStatus' },
   { name: 'Reg Status', id: 'registered' },
+  { name: 'Payment', id: 'payment' },
   // { name: 'Edit Reg Status', id: 'editRegistered' },
   { name: 'Attending Days', id: 'attendingDays' },
 ];
@@ -63,6 +64,8 @@ export default function AdminPage() {
       //       <EditIcon size='small' /> {!user.registered ? 'Unregister' : 'Register'}
       //     </Button>
       //   );
+      case 'payment':
+        return <p className={cn('text-sm', cellValue && 'text-green-400', !cellValue && 'text-red-400')}>{cellValue ? 'DONE' : 'FALSE'}</p>;
       case 'attendingDays':
         return <p className='text-sm'>{readableAttendingDays(cellValue)}</p>;
       default:
@@ -162,9 +165,9 @@ export default function AdminPage() {
           />
         </div>
         <Table aria-label='Admin table with custom cells'>
-          <TableHeader columns={columns}>{(column) => <TableColumn key={column.id}>{column.name}</TableColumn>}</TableHeader>
+          <TableHeader columns={columns}>{(column: { id: any; name: any }) => <TableColumn key={column.id}>{column.name}</TableColumn>}</TableHeader>
           <TableBody items={usersData.filter((item) => JSON.stringify(Object.values(item)).toLowerCase().includes(query.toLowerCase())) || []}>
-            {(item: UserType) => <TableRow key={item.uid}>{(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}</TableRow>}
+            {(item: UserType) => <TableRow key={item.uid}>{(columnKey: any) => <TableCell>{renderCell(item, columnKey)}</TableCell>}</TableRow>}
           </TableBody>
         </Table>
       </div>
