@@ -29,6 +29,8 @@ const columns = [
   { name: 'Attending Days', id: 'attendingDays' },
 ];
 
+const showTable = false;
+
 export default function AdminPage() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const usersData = useFirestore<UserType>('users');
@@ -147,30 +149,38 @@ export default function AdminPage() {
         </ModalContent>
       </Modal>
 
-      <div>
-        <div className='mb-3 w-full flex flex-col items-center justify-center'>
-          <Input
-            classNames={{
-              base: 'max-w-full sm:max-w-[16rem] h-10',
-              mainWrapper: 'h-full',
-              input: 'text-small',
-              inputWrapper: 'h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20',
-            }}
-            placeholder='Type to search...'
-            size='sm'
-            startContent={<SearchIcon size={18} />}
-            type='search'
-            onValueChange={setQuery}
-            value={query}
-          />
+      {showTable ? (
+        <div>
+          <div className='mb-3 w-full flex flex-col items-center justify-center'>
+            <Input
+              classNames={{
+                base: 'max-w-full sm:max-w-[16rem] h-10',
+                mainWrapper: 'h-full',
+                input: 'text-small',
+                inputWrapper: 'h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20',
+              }}
+              placeholder='Type to search...'
+              size='sm'
+              startContent={<SearchIcon size={18} />}
+              type='search'
+              onValueChange={setQuery}
+              value={query}
+            />
+          </div>
+          <Table aria-label='Admin table with custom cells'>
+            <TableHeader columns={columns}>
+              {(column: { id: any; name: any }) => <TableColumn key={column.id}>{column.name}</TableColumn>}
+            </TableHeader>
+            <TableBody items={usersData.filter((item) => JSON.stringify(Object.values(item)).toLowerCase().includes(query.toLowerCase())) || []}>
+              {(item: UserType) => <TableRow key={item.uid}>{(columnKey: any) => <TableCell>{renderCell(item, columnKey)}</TableCell>}</TableRow>}
+            </TableBody>
+          </Table>
         </div>
-        <Table aria-label='Admin table with custom cells'>
-          <TableHeader columns={columns}>{(column: { id: any; name: any }) => <TableColumn key={column.id}>{column.name}</TableColumn>}</TableHeader>
-          <TableBody items={usersData.filter((item) => JSON.stringify(Object.values(item)).toLowerCase().includes(query.toLowerCase())) || []}>
-            {(item: UserType) => <TableRow key={item.uid}>{(columnKey: any) => <TableCell>{renderCell(item, columnKey)}</TableCell>}</TableRow>}
-          </TableBody>
-        </Table>
-      </div>
+      ) : (
+        <div className='mb-3 w-full flex flex-col items-center justify-center h-3/4'>
+          <p className='text-4xl'>Please refer to the google sheet!</p>
+        </div>
+      )}
     </>
   );
 }

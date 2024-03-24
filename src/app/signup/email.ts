@@ -18,7 +18,7 @@ const readableAttendingDays = (attendingDays: string[]) => {
 const getEmailHTML = (userData: UserType) => {
   return `
         <h1>Hi ${userData.name},</h1>
-        <p>Thanks for registering for Ashoka University's cultural fest, Banjara.</p>
+        <p>Thanks for registering for Ashoka University's cultural fest, Banjaara.</p>
         <p>Here are your registration details:</p>
         <ul>
             <li>UID: ${userData.uid}</li>
@@ -35,7 +35,7 @@ const getEmailHTML = (userData: UserType) => {
 const getEmailText = (userData: UserType) => {
   return `
             Hi ${userData.name},
-            Thanks for registering for Ashoka University's cultural fest, Banjara.
+            Thanks for registering for Ashoka University's cultural fest, Banjaara.
             Here are your registration details:
             UID: ${userData.uid}
             Name: ${userData.name}

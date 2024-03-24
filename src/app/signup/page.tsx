@@ -128,7 +128,7 @@ const SignupForm = () => {
       await setDoc(existingUserRef, existingUser);
       emailOptions = {
         to: existingUser.email,
-        subject: 'Banjara Day Registration Email',
+        subject: 'Banjaara Day Registration Email',
         html: getEmailHTML(existingUser),
         text: getEmailText(existingUser),
       };
@@ -138,7 +138,7 @@ const SignupForm = () => {
 
       emailOptions = {
         to: newUser.email,
-        subject: 'Banjara Verification Email',
+        subject: 'Banjaara Verification Email',
         html: getEmailHTML(newUser),
         text: getEmailText(newUser),
       };
@@ -174,7 +174,7 @@ const SignupForm = () => {
   return (
     <div className='w-full h-full flex flex-col items-center justify-center'>
       <Card className='py-2 px-1 md:p-4 w-[95%] md:w-5/6 lg:w-2/3 m-auto' shadow='lg'>
-        <p className='text-center mx-auto text-3xl md:text-4xl font-bold py-4'>Banjara On-Spot Registration</p>
+        <p className='text-center mx-auto text-3xl md:text-4xl font-bold py-4'>Banjaara On-Spot Registration</p>
         <CardBody className='gap-4'>
           {/* Input fields for UID, name, college, email, phone */}
           <Input size='sm' label='Name' value={name} onValueChange={setName} required />
