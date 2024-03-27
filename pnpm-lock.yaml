@@ -32,9 +32,6 @@ dependencies:
   '@nextui-org/theme':
     specifier: ^2.1.18
     version: 2.1.18(tailwindcss@3.4.1)
-  '@types/nodemailer':
-    specifier: ^6.4.14
-    version: 6.4.14
   clsx:
     specifier: ^2.1.0
     version: 2.1.0
@@ -67,6 +64,9 @@ devDependencies:
   '@types/node':
     specifier: ^20
     version: 20.11.22
+  '@types/nodemailer':
+    specifier: ^6.4.14
+    version: 6.4.14
   '@types/react':
     specifier: ^18
     version: 18.2.60
@@ -2194,7 +2194,7 @@ packages:
     resolution: {integrity: sha512-fUWthHO9k9DSdPCSPRqcu6TWhYyxTBg382vlNIttSe9M7XfsT06y0f24KHXtbnijPGGRIcVvdKHTNikOI6qiHA==}
     dependencies:
       '@types/node': 20.11.22
-    dev: false
+    dev: true
 
   /@types/prop-types@15.7.11:
     resolution: {integrity: sha512-ga8y9v9uyeiLdpKddhxYQkxNDrfvuPrlFb0N1qnZZByvcElJaXthF1UhvCh9TLWJBEHeNtdnbysW7Y6Uq8CVng==}

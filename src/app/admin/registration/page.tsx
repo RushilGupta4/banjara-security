@@ -10,6 +10,7 @@ import { Modal, ModalBody, ModalHeader, ModalContent, useDisclosure } from '@nex
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { readableAttendingDays } from '@/app/signup/email';
+import { UserType } from '@/types';
 
 const GenericStatusUpdatePage = ({
   dataKey,
@@ -24,7 +25,7 @@ const GenericStatusUpdatePage = ({
   alreadyFalseMessage,
   prereqKey = null,
 }: {
-  dataKey: string;
+  dataKey: keyof UserType;
   title: string;
   actionTrue: string;
   actionFalse: string;
@@ -39,7 +40,7 @@ const GenericStatusUpdatePage = ({
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [uid, setUid] = useState('');
   const [status, setStatus] = useState(false);
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<UserType | null>(null);
 
   const updateRegistrationStatus = async (newStatus: boolean) => {
     if (!uid) {
@@ -63,12 +64,18 @@ const GenericStatusUpdatePage = ({
     }
 
     setStatus(newStatus);
-    setCurrentUser(docSnap.data());
+    setCurrentUser(docSnap.data() as UserType);
 
     onOpen();
   };
 
   const confirmEditColumn = async (onClose: () => void) => {
+    if (!currentUser) {
+      toast.error('User data not found.');
+      onClose();
+      return;
+    }
+
     // Check if attempting to set the registration to the same value
     if (currentUser[dataKey] === status) {
       toast.error(status ? alreadyTrueMessage : alreadyFalseMessage);
@@ -103,29 +110,39 @@ const GenericStatusUpdatePage = ({
               <ModalBody>
                 <p>{status ? confirmationMessageTrue : confirmationMessageFalse}</p>
 
-                <div className='mx-auto w-11/12'>
-                  <li>
-                    <b>UID:</b> {currentUser.uid}
-                  </li>
-                  <li>
-                    <b>Name:</b> {currentUser.name}
-                  </li>
-                  <li>
-                    <b>Email:</b> {currentUser.email}
-                  </li>
-                  <li>
-                    <b>Current Payment Status:</b> {currentUser.payment ? 'Paid' : 'Not Paid'}
-                  </li>
-                  <li>
-                    <b>Attending Days:</b> {readableAttendingDays(currentUser.attendingDays)}
-                  </li>
-                </div>
+                {currentUser && (
+                  <>
+                    <div className='mx-auto w-11/12'>
+                      <li>
+                        <b>UID:</b> {currentUser.uid}
+                      </li>
+                      <li>
+                        <b>Name:</b> {currentUser.name}
+                      </li>
+                      <li>
+                        <b>College:</b> {currentUser.college}
+                      </li>
+                      <li>
+                        <b>Email:</b> {currentUser.email}
+                      </li>
+                      <li>
+                        <b>Phone:</b> {currentUser.phone} {currentUser.repeatedNumber ? ' (DUPLICATE)' : ''}
+                      </li>
+                      <li>
+                        <b>Current Payment Status:</b> {currentUser.payment ? 'Paid' : 'Not Paid'}
+                      </li>
+                      <li>
+                        <b>Attending Days:</b> {readableAttendingDays(currentUser.attendingDays)}
+                      </li>
+                    </div>
 
-                <span>Note: Registering a user means that you have taken money from them </span>
+                    <span className='text-red-400 font-[500]'>Note: Registering a user means that you have taken money from them </span>
 
-                <Button className='mt-1' onClick={() => confirmEditColumn(onClose)}>
-                  Confirm
-                </Button>
+                    <Button className='mt-1' onClick={() => confirmEditColumn(onClose)}>
+                      Confirm
+                    </Button>
+                  </>
+                )}
               </ModalBody>
             </>
           )}

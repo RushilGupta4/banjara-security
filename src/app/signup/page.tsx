@@ -34,7 +34,7 @@ const SignupForm = () => {
     return isEmailValid && isPhoneValid && isAttendingDaysValid;
   };
 
-  const checkIfUserExists = async () => {
+  const checkIfUserExists = async (email: string, phone: string) => {
     const usersRef = collection(firestore, 'users');
     const emailQuery = query(usersRef, where('email', '==', email));
     const phoneQuery = query(usersRef, where('phone', '==', phone));
@@ -42,17 +42,14 @@ const SignupForm = () => {
     const emailQuerySnapshot = await getDocs(emailQuery);
     const phoneQuerySnapshot = await getDocs(phoneQuery);
 
+    const repeatedNumber = !emailQuerySnapshot.empty;
+
     if (!emailQuerySnapshot.empty) {
       const user = emailQuerySnapshot.docs[0].data() as UserType;
-      return { status: true, existingUser: user, error: 'Email already registered.' };
+      return { status: true, existingUser: user, error: 'Email already registered.', repeatedNumber };
     }
 
-    if (!phoneQuerySnapshot.empty) {
-      const user = phoneQuerySnapshot.docs[0].data() as UserType;
-      return { status: true, existingUser: user, error: 'Phone number already registered.' };
-    }
-
-    return { status: false, existingUser: null, error: null };
+    return { status: false, existingUser: null, error: null, repeatedNumber };
   };
 
   const handleSubmit = async () => {
@@ -75,6 +72,8 @@ const SignupForm = () => {
 
     let emailOptions = {};
 
+    const { status, existingUser, error, repeatedNumber } = await checkIfUserExists(email, finalPhone);
+
     // Generate a random 6-digit UID
     const uid = Math.floor(100000 + Math.random() * 900000).toString();
     const newUser: UserType = {
@@ -88,9 +87,9 @@ const SignupForm = () => {
       competitions: [],
       attendingDays: [attendingDay],
       payment: false,
+      repeatedNumber,
     };
 
-    const { status, existingUser, error } = await checkIfUserExists();
     if (status) {
       if (!existingUser) {
         toast.error(error);

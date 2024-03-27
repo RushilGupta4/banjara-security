@@ -10,6 +10,7 @@ type UserType = {
   attendingDays: string[];
   team?: string;
   payment: boolean;
+  repeatedNumber: boolean;
 };
 
 type Replacement = {
