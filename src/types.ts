@@ -8,8 +8,10 @@ type UserType = {
   registered: boolean;
   competitions: string[];
   attendingDays: string[];
+  timestamps: { [key: string]: string }[];
   team?: string;
-  payment: boolean;
+  paymentDay1: boolean;
+  paymentDay2: boolean;
   repeatedNumber: boolean;
 };
 

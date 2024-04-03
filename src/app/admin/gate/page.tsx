@@ -7,8 +7,10 @@ import { Card, CardBody } from '@nextui-org/card';
 import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
 import { Modal, ModalBody, ModalHeader, ModalContent, useDisclosure } from '@nextui-org/modal';
+import { UserType } from '@/types';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { getCurrentDayInt } from '@/lib/dateUtil';
 
 const GenericStatusUpdatePage = ({
   dataKey,
@@ -23,7 +25,7 @@ const GenericStatusUpdatePage = ({
   alreadyFalseMessage,
   prereqKey = null,
 }: {
-  dataKey: string;
+  dataKey: keyof UserType;
   title: string;
   actionTrue: string;
   actionFalse: string;
@@ -38,7 +40,7 @@ const GenericStatusUpdatePage = ({
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [uid, setUid] = useState('');
   const [status, setStatus] = useState(false);
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<UserType | null>(null);
 
   const updateRegistrationStatus = async (newStatus: boolean) => {
     if (!uid) {
@@ -55,20 +57,26 @@ const GenericStatusUpdatePage = ({
     }
 
     if (prereqKey) {
-      if (!docSnap.data()[prereqKey]) {
-        toast.error('User has not met the prerequisite.');
+      if (docSnap.data()[prereqKey]) {
+        toast.error('User has not been unregistered yet.');
         return;
       }
     }
 
     setStatus(newStatus);
-    setCurrentUser(docSnap.data());
+    setCurrentUser(docSnap.data() as UserType);
 
     onOpen();
   };
 
   const confirmEditColumn = async (onClose: () => void) => {
     // Check if attempting to set the registration to the same value
+    if (!currentUser) {
+      toast.error('User data not found.');
+      onClose();
+      return;
+    }
+
     if (currentUser[dataKey] === status) {
       toast.error(status ? alreadyTrueMessage : alreadyFalseMessage);
       onClose();
@@ -78,10 +86,13 @@ const GenericStatusUpdatePage = ({
     const userRef = doc(firestore, `users/${uid}`);
 
     try {
-      const data = { [dataKey]: status };
-      if (!status) {
-        data.registered = false;
-      }
+      const data = { [dataKey]: status, timestamps: currentUser.timestamps };
+
+      const curDay = getCurrentDayInt();
+      const entry = {
+        [new Date().toISOString()]: (status ? 'Signed In' : 'Signed Out') + ` (Day ${curDay})`,
+      };
+      data.timestamps.push(entry);
 
       await updateDoc(userRef, data);
       toast.success(status ? successMessageTrue : successMessageFalse);
@@ -106,13 +117,13 @@ const GenericStatusUpdatePage = ({
 
                 <div className='mx-auto w-11/12'>
                   <li>
-                    <b>UID:</b> {currentUser.uid}
+                    <b>UID:</b> {currentUser?.uid}
                   </li>
                   <li>
-                    <b>Name:</b> {currentUser.name}
+                    <b>Name:</b> {currentUser?.name} {currentUser?.repeatedNumber && <span className='text-red-400 font-[500]'> (DUPLICATE)</span>}
                   </li>
                   <li>
-                    <b>Email:</b> {currentUser.email}
+                    <b>Email:</b> {currentUser?.email}
                   </li>
                 </div>
 
@@ -172,6 +183,7 @@ export default function GatePage() {
       successMessageFalse={'User has been signed out.'}
       alreadyTrueMessage={'User is already signed in.'}
       alreadyFalseMessage={'User is already signed out.'}
+      prereqKey={'registered'}
     />
   );
 }

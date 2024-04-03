@@ -126,7 +126,7 @@ const ReplaceUserPage = () => {
 
     // Set new user data with old user's competitions
     const newUserRef = doc(firestore, `users/${newUserId}`);
-    const newUserData = { ...newUser, competitions: oldUser.competitions };
+    const newUserData = { ...newUser, competitions: oldUser.competitions, paymentDay1: oldUser.paymentDay1, paymentDay2: oldUser.paymentDay2 };
     batch.set(newUserRef, newUserData);
 
     // Log the replacement

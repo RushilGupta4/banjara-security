@@ -1,6 +1,6 @@
 'use client';
 
-import { use, useState } from 'react';
+import { useState } from 'react';
 import { getEmailHTML, getEmailText } from './email';
 import { Card, CardBody } from '@nextui-org/card';
 import { Button } from '@nextui-org/button';
@@ -11,6 +11,7 @@ import { firestore } from '@/firebase/config';
 import { collection, query, where, getDocs, doc, setDoc } from 'firebase/firestore';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { validateAttendingDays } from './utils';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const registerationOptions = [
@@ -18,6 +19,19 @@ const registerationOptions = [
   { label: 'Day 2', value: '2' },
   { label: 'Both Days', value: '3' },
 ];
+
+const generateUUID = async (): Promise<string> => {
+  const uid = Math.floor(100000 + Math.random() * 900000).toString();
+  // check if uid exists in firestore
+  const usersRef = collection(firestore, 'users');
+  const queryRef = query(usersRef, where('uid', '==', uid));
+  const querySnapshot = await getDocs(queryRef);
+
+  if (querySnapshot.empty) {
+    return uid;
+  }
+  return generateUUID();
+};
 
 const SignupForm = () => {
   const [name, setName] = useState('');
@@ -42,7 +56,7 @@ const SignupForm = () => {
     const emailQuerySnapshot = await getDocs(emailQuery);
     const phoneQuerySnapshot = await getDocs(phoneQuery);
 
-    const repeatedNumber = !emailQuerySnapshot.empty;
+    const repeatedNumber = !phoneQuerySnapshot.empty;
 
     if (!emailQuerySnapshot.empty) {
       const user = emailQuerySnapshot.docs[0].data() as UserType;
@@ -75,7 +89,7 @@ const SignupForm = () => {
     const { status, existingUser, error, repeatedNumber } = await checkIfUserExists(email, finalPhone);
 
     // Generate a random 6-digit UID
-    const uid = Math.floor(100000 + Math.random() * 900000).toString();
+    const uid = await generateUUID();
     const newUser: UserType = {
       uid,
       name,
@@ -86,7 +100,9 @@ const SignupForm = () => {
       registered: false,
       competitions: [],
       attendingDays: [attendingDay],
-      payment: false,
+      paymentDay1: false,
+      paymentDay2: false,
+      timestamps: [],
       repeatedNumber,
     };
 
@@ -97,26 +113,9 @@ const SignupForm = () => {
         return;
       }
 
-      if (existingUser.attendingDays.includes('3')) {
-        toast.error('User already registered for both days.');
-        setLoading(false);
-        return;
-      }
-
-      if (existingUser.attendingDays.includes(attendingDay)) {
-        toast.error('User already registered for the selected day.');
-        setLoading(false);
-        return;
-      }
-
-      if (attendingDay === '1' && existingUser.attendingDays.includes('2')) {
-        toast.error('User already registered for Day 2.');
-        setLoading(false);
-        return;
-      }
-
-      if (attendingDay === '3' && existingUser.attendingDays.length > 0) {
-        toast.error('User already registered for a day.');
+      const { success, message } = validateAttendingDays(existingUser.attendingDays, attendingDay);
+      if (!success) {
+        toast.error(message);
         setLoading(false);
         return;
       }

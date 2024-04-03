@@ -34,8 +34,8 @@ const CompetitionUpdatePage = () => {
 
     if (docSnap.exists()) {
       setCurrentUser(docSnap.data() as UserType);
-      console.log(docSnap.data().competitions || []);
       setSelectedCompetitions(docSnap.data().competitions || []);
+      setTeam(docSnap.data().team || '');
     } else {
       setCurrentUser(null);
     }
@@ -118,7 +118,9 @@ const CompetitionUpdatePage = () => {
                 </div>
               </ModalBody>
 
-              <Button onClick={() => confirmUpdate(onClose)}>Confirm</Button>
+              <Button className='mx-2' onClick={() => confirmUpdate(onClose)}>
+                Confirm
+              </Button>
             </>
           )}
         </ModalContent>
