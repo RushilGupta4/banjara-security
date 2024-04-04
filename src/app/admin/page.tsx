@@ -1,16 +1,17 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/table';
 import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
 import { Modal, ModalContent, ModalHeader, ModalBody, useDisclosure } from '@nextui-org/modal';
+import { Switch } from '@nextui-org/switch';
+import { Spinner } from '@nextui-org/spinner';
 import { firestore } from '@/firebase/config';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, collection, getDocs } from 'firebase/firestore';
 import { EditIcon } from './EditIcon';
 import { SearchIcon } from './SearchIcon';
 import { UserType } from '@/types';
-import useFirestore from '@/hooks/useFirestore';
 import cn from '@/lib/cn';
 import { readableAttendingDays } from '@/app/signup/email';
 import Link from 'next/link';
@@ -22,22 +23,44 @@ const columns = [
   // { name: 'Team', id: 'team' },
   { name: 'Email', id: 'email' },
   { name: 'Phone', id: 'phone' },
-  { name: 'Gate', id: 'gateStatus' },
+  // { name: 'Gate', id: 'gateStatus' },
   // { name: 'Edit Status', id: 'editGateStatus' },
-  { name: 'Reg Status', id: 'registered' },
-  { name: 'Payment', id: 'payment' },
+  // { name: 'Reg Status', id: 'registered' },
+  // { name: 'Payment', id: 'payment' },
   // { name: 'Edit Reg Status', id: 'editRegistered' },
-  { name: 'Attending Days', id: 'attendingDays' },
+  // { name: 'Attending Days', id: 'attendingDays' },
 ];
 
-const showTable = false;
+const masterTableControl = true;
 
 export default function AdminPage() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const usersData = useFirestore<UserType>('users');
+  const [userData, setUserData] = useState<UserType[]>([]);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [currentColumn, setCurrentColumn] = useState<any>(null);
-  const [query, setQuery] = useState('');
+  const [searchQuery, setQuery] = useState('');
+  const [showTable, setShowTable] = useState(false);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const usersRef = collection(firestore, 'users');
+      const querySnapshot = await getDocs(usersRef);
+
+      const users: UserType[] = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data() as UserType;
+        users.push(data);
+        console.log('User:', data);
+      });
+
+      setUserData(users);
+    };
+
+    if (!showTable) return;
+    if (userData.length > 0) return;
+
+    fetchUsers();
+  }, [showTable]);
 
   const renderCell = useCallback((user: any, columnKey: any) => {
     const cellValue: any = user[columnKey];
@@ -150,33 +173,56 @@ export default function AdminPage() {
         </ModalContent>
       </Modal>
 
-      {showTable ? (
-        <div>
-          <div className='mb-3 w-full flex flex-col items-center justify-center'>
-            <Input
-              classNames={{
-                base: 'max-w-full sm:max-w-[16rem] h-10',
-                mainWrapper: 'h-full',
-                input: 'text-small',
-                inputWrapper: 'h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20',
-              }}
-              placeholder='Type to search...'
-              size='sm'
-              startContent={<SearchIcon size={18} />}
-              type='search'
-              onValueChange={setQuery}
-              value={query}
-            />
+      {masterTableControl ? (
+        <>
+          <div>
+            <div className='flex flex-col justify-between items-center mb-8'>
+              <Switch className='cursor-pointer' checked={showTable} onChange={() => setShowTable(!showTable)} size='sm' color='primary'>
+                Show Table
+              </Switch>
+            </div>
           </div>
-          <Table aria-label='Admin table with custom cells'>
-            <TableHeader columns={columns}>
-              {(column: { id: any; name: any }) => <TableColumn key={column.id}>{column.name}</TableColumn>}
-            </TableHeader>
-            <TableBody items={usersData.filter((item) => JSON.stringify(Object.values(item)).toLowerCase().includes(query.toLowerCase())) || []}>
-              {(item: UserType) => <TableRow key={item.uid}>{(columnKey: any) => <TableCell>{renderCell(item, columnKey)}</TableCell>}</TableRow>}
-            </TableBody>
-          </Table>
-        </div>
+          {showTable && (
+            <>
+              {userData.length > 0 ? (
+                <div>
+                  <div className='mb-8 w-full flex flex-col items-center justify-center'>
+                    <Input
+                      classNames={{
+                        base: 'max-w-full sm:max-w-[16rem] h-10',
+                        mainWrapper: 'h-full',
+                        input: 'text-small',
+                        inputWrapper: 'h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20',
+                      }}
+                      placeholder='Type to search...'
+                      description='Enter 3 or more characters'
+                      size='sm'
+                      startContent={<SearchIcon size={18} />}
+                      type='search'
+                      onValueChange={setQuery}
+                      value={searchQuery}
+                    />
+                  </div>
+                  <Table aria-label='Admin table with custom cells'>
+                    <TableHeader columns={columns}>
+                      {(column: { id: any; name: any }) => <TableColumn key={column.id}>{column.name}</TableColumn>}
+                    </TableHeader>
+                    <TableBody
+                      items={userData.filter((item) => JSON.stringify(Object.values(item)).toLowerCase().includes(searchQuery.toLowerCase())) || []}>
+                      {(item: UserType) => (
+                        <TableRow key={item.uid}>{(columnKey: any) => <TableCell>{renderCell(item, columnKey)}</TableCell>}</TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
+              ) : (
+                <div className='w-full flex flex-col items-center justify-center h-3/4'>
+                  <Spinner />
+                </div>
+              )}
+            </>
+          )}
+        </>
       ) : (
         <div className='mb-3 w-full flex flex-col items-center justify-center h-3/4'>
           <p className='text-4xl'>Please refer to the google sheet!</p>
