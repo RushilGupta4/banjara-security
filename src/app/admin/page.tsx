@@ -226,14 +226,16 @@ export default function AdminPage() {
       ) : (
         <div className='mb-3 w-full flex flex-col items-center justify-center h-3/4'>
           <p className='text-4xl'>Please refer to the google sheet!</p>
-          <Link
-            href='https://docs.google.com/spreadsheets/d/14X1tDZ43XS9BKW8KIJvRz8diX_c_WEpTcL9uRrb5hAw/edit?usp=sharing'
-            target='_blank'
-            className='text-xl text-blue-500 underline mt-4'>
-            View Sheet
-          </Link>
         </div>
       )}
+      <div className='mb-3 w-full flex flex-col items-center justify-center h-3/4'>
+        <Link
+          href='https://docs.google.com/spreadsheets/d/14X1tDZ43XS9BKW8KIJvRz8diX_c_WEpTcL9uRrb5hAw/edit?usp=sharing'
+          target='_blank'
+          className='text-xl text-blue-500 underline mt-4'>
+          View Sheet
+        </Link>
+      </div>
     </>
   );
 }
