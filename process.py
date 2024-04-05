@@ -17,27 +17,28 @@ main_cols = {
 }
 
 competitions_to_days = {
-    "Footloose": [1],
-    "Dance Off": [1],
-    "Battle of the Bands": [1],
-    "Concordia": [2],
-    "Nautanki": [2],
-    "Mukhauta": [1],
-    "Rahageer": [2],
-    "Symphony of Suspicion": [1],
+    "Footloose": [1, 2],
+    "Dance Off": [1, 2],
+    "Battle of the Bands": [1, 2],
+    "Concordia": [1, 2],
+    "Nautanki": [1, 2],
+    "Mukhauta": [1, 2],
+    "Rahageer": [1, 2],
+    "Symphony of Suspicion": [1, 2],
     "Ashoka Parliamentary Debate": [1, 2],
-    "Trashionista": [2],
-    "Aaina": [1],
-    "In-quiz-itive": [2],
-    "Marketing 101": [1],
-    "FIFA": [2],
-    "Starstruck": [1],
-    "Samadhan": [1],
-    "Barrier Barrage": [2],
-    "Food Fiesta": [2],
+    "Trashionista": [1, 2],
+    "Aaina": [1, 2],
+    "In-quiz-itive": [1, 2],
+    "Marketing 101": [1, 2],
+    "FIFA": [1, 2],
+    "Starstruck": [1, 2],
+    "Samadhan": [1, 2],
+    "Barrier Barrage": [1, 2],
+    "Food Fiesta": [1, 2],
     "Attendee Day 1": [1],
     "Attendee Day 2": [2],
     "Attendee Both Days": [1, 2],
+    "Space Turtle": [1, 2],
 }
 
 sheet_name_mapping = {
@@ -61,20 +62,18 @@ sheet_name_mapping = {
     "Attendee Day 1": "Attendee Day 1",
     "Attendee Day 2": "Attendee Day 2",
     "Attendee Both Days": "Attendee Both Days",
+    "space turtle": "Space Turtle",
 }
 
-uuids = []
+with open("users copy.json", "r") as f:
+    existing_users = json.load(f)
 
 
-def generate_uuid():
-    # 6 digit number
-    uuid = str(random.randint(100000, 999999))
-    while uuid in uuids:
-        print("YOOO")
-        uuid = str(random.randint(100000, 999999))
-
-    uuids.append(uuid)
-    return uuid
+def get_uid_from_email(email):
+    for user in existing_users:
+        if user["email"] == email:
+            return user["uid"]
+    return None
 
 
 dfs = []
@@ -189,7 +188,6 @@ for email in emails:
         days += competitions_to_days[comp]
 
     days = list(set(days))
-    days = [1, 2]
 
     duplicated_number = not df[(df["phone"] == phone) & (df["email"] != email)].empty
 
@@ -197,8 +195,9 @@ for email in emails:
         if i in competitions:
             competitions.remove(i)
 
+    uid = get_uid_from_email(email)
     user = {
-        "uid": generate_uuid(),
+        "uid": uid,
         "name": name,
         "college": college,
         "email": email,
@@ -224,10 +223,8 @@ for email in emails:
 
 
 # What we do not have: Dance off
-
-with open("users.json", "w") as f:
-    json.dump(users, f, indent=2)
-
+with open("usersFinal.json", "w") as f:
+    json.dump(users, f, indent=4)
 
 print()
 

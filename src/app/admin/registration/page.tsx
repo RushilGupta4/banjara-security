@@ -15,6 +15,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { validateAttendingDays } from '@/app/signup/utils';
 import { getCurrentDayInt } from '@/lib/dateUtil';
 
+export const dynamic = 'force-dynamic';
+
 const GenericStatusUpdatePage = ({
   dataKey,
   title,

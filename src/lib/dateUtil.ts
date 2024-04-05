@@ -4,9 +4,8 @@ const days: { [key: string]: number } = {
 };
 
 const getCurrentDayInt = () => {
-  const currentDate = new Date();
-  const dateString = currentDate.toISOString().split('T')[0];
-
+  const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
+  const dateString = new Date(Date.now() - tzoffset).toISOString().split('T')[0];
   console.log(dateString);
 
   return days[dateString];

@@ -4,6 +4,10 @@ venv/
 sheet.xlsx
 users.json
 users2.json
+usersFinal.json
+users copy.json
+modifiedUsers.json
+failed.json
 
 # dependencies
 /node_modules

@@ -5,6 +5,8 @@ import Mail from 'nodemailer/lib/mailer';
 
 const transport = nodemailer.createTransport({
   service: 'gmail',
+  pool: true,
+  maxConnections: 20,
   auth: {
     user: process.env.NODEMAILER_EMAIL,
     pass: process.env.NODEMAILER_PW,

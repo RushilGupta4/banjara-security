@@ -1,7 +1,8 @@
 const { doc, setDoc } = require('firebase/firestore');
 const { initializeApp } = require('firebase/app');
 const { getFirestore } = require('firebase/firestore');
-const userData = require('./users2.json');
+const fs = require('fs');
+const userData = require('./modifiedUsers.json');
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBVkx_3Zu26p7kThmr2vxSKILb-t2splT0',
@@ -79,6 +80,8 @@ const regUser = async (user) => {
   await setDoc(newUserRef, user);
   // return;
 
+  let success = false;
+
   try {
     const resp = await fetch('http://localhost:3000/email', {
       method: 'POST',
@@ -86,16 +89,36 @@ const regUser = async (user) => {
     });
 
     if (resp.status != 200) throw new Error('Email sending failed');
+    success = true;
   } catch (error) {
-    console.log(user.email, error);
+    // console.log(user.email, error);
   }
+
+  return success;
 };
 
-let i = 1;
-userData.forEach(async (user) => {
-  await regUser(user);
-  console.log(i, 'Registered', user.email);
-  i++;
+const main = async () => {
+  const failedEmails = [];
+  for (let i = 0; i < userData.length; i++) {
+    const user = userData[i];
+    const success = await regUser(user);
 
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-});
+    if (!success) {
+      failedEmails.push(user.email);
+      console.log(i + 1, 'Failed', user.email);
+    } else {
+      console.log(i + 1, 'Registered', user.email);
+    }
+
+    fs.writeFile('failed.json', JSON.stringify(failedEmails), function (err) {
+      if (err) {
+        console.log(err);
+      }
+    });
+    // await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+
+  console.log('Failed Emails:', failedEmails);
+};
+
+main();

@@ -17,7 +17,6 @@ const competitionsData = [
   'Dance Off',
   'Battle of the Bands',
   'Concordia',
-  'Jukebox',
   'Nautanki',
   'Mukhauta',
   'Rahageer',
@@ -27,13 +26,12 @@ const competitionsData = [
   'Aaina',
   'In-quiz-itive',
   'Marketing 101',
-  'Space Turtle',
   'FIFA',
-  'Valorant',
   'Starstruck',
   'Samadhan',
-  'Barrier Barage',
+  'Barrier Barrage',
   'Food Fiesta',
+  'Space Turtle',
 ];
 
 const CompetitionUpdatePage = () => {
@@ -60,6 +58,8 @@ const CompetitionUpdatePage = () => {
       setTeam(docSnap.data().team || '');
     } else {
       setCurrentUser(null);
+      setSelectedCompetitions([]);
+      setTeam('');
     }
   };
 
@@ -148,8 +148,8 @@ const CompetitionUpdatePage = () => {
         </ModalContent>
       </Modal>
 
-      <div className='h-[80%] flex flex-col justify-center items-center'>
-        <Card className='py-1 w-11/12 md:w-3/5 lg:w-2/5'>
+      <div className='flex flex-col justify-center items-center mb-8'>
+        <Card className='py-1 w-11/12 md:w-3/5 lg:w-2/5 mb-8'>
           <CardBody>
             <div className='text-center mb-4'>
               <p className='text-xl font-bold'>Update User Competitions</p>
