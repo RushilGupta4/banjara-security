@@ -12,7 +12,29 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { UserType } from '@/types';
 
-const competitionsData = ['Battle of the Bands', 'Cryptic Hunt', 'Finance', 'Athletics', 'Dance', 'Swimming'];
+const competitionsData = [
+  'Footloose',
+  'Dance Off',
+  'Battle of the Bands',
+  'Concordia',
+  'Jukebox',
+  'Nautanki',
+  'Mukhauta',
+  'Rahageer',
+  'Symphony of Suspicion',
+  'Ashoka Parliamentary Debate',
+  'Trashionista',
+  'Aaina',
+  'In-quiz-itive',
+  'Marketing 101',
+  'Space Turtle',
+  'FIFA',
+  'Valorant',
+  'Starstruck',
+  'Samadhan',
+  'Barrier Barage',
+  'Food Fiesta',
+];
 
 const CompetitionUpdatePage = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();

@@ -12,6 +12,8 @@ import { readableAttendingDays } from '@/app/signup/email';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+export const dynamic = 'force-dynamic';
+
 const UserCard = ({
   title,
   user,
@@ -126,7 +128,13 @@ const ReplaceUserPage = () => {
 
     // Set new user data with old user's competitions
     const newUserRef = doc(firestore, `users/${newUserId}`);
-    const newUserData = { ...newUser, competitions: oldUser.competitions, paymentDay1: oldUser.paymentDay1, paymentDay2: oldUser.paymentDay2 };
+    const newUserData = {
+      ...newUser,
+      competitions: oldUser.competitions,
+      paymentDay1: oldUser.paymentDay1,
+      paymentDay2: oldUser.paymentDay2,
+      attendingDays: oldUser.attendingDays,
+    } as UserType;
     batch.set(newUserRef, newUserData);
 
     // Log the replacement

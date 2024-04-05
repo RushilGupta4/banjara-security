@@ -12,6 +12,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getCurrentDayInt } from '@/lib/dateUtil';
 
+export const dynamic = 'force-dynamic';
+
 const GenericStatusUpdatePage = ({
   dataKey,
   title,
