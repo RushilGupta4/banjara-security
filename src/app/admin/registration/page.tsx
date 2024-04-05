@@ -129,11 +129,11 @@ const GenericStatusUpdatePage = ({
       data.timestamps.push(entry);
 
       if (status) {
-        if (currentUser.attendingDays.includes('3')) {
+        if (selectedDays.includes('3')) {
           data.paymentDay1 = true;
           data.paymentDay2 = true;
         } else {
-          if (currentUser.attendingDays.includes(curDay.toString())) {
+          if (selectedDays.includes(curDay.toString())) {
             //@ts-ignore
             data[paymentKey] = true;
           }
