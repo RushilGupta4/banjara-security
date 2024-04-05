@@ -96,4 +96,6 @@ userData.forEach(async (user) => {
   await regUser(user);
   console.log(i, 'Registered', user.email);
   i++;
+
+  await new Promise((resolve) => setTimeout(resolve, 1000));
 });
